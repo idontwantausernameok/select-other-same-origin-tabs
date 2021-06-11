@@ -10,17 +10,22 @@ browser.menus.create({
 	onclick: async function(info, tab) {
 		if(info.menuItemId.startsWith(extname)){
 			const url = new URL(tab.url);
-			const tabs = await browser.tabs.query({ url: url.origin + "/*", hidden: false});
+			const tabs = await browser.tabs.query({ 
+				url: url.origin + "/*", 
+				hidden: false
+			});
 
 			let tmp = {};
 
 			//tmp[tab.windowId] = [tab.index];
 
 			tabs.forEach( (t) => {
-				if (typeof tmp[t.windowId] === 'undefined'){
-					tmp[t.windowId] = [];
-				} 
-				tmp[t.windowId].push(t.index);
+				if(t.id !== tab.id) {
+					if (typeof tmp[t.windowId] === 'undefined'){
+						tmp[t.windowId] = [];
+					} 
+					tmp[t.windowId].push(t.index);
+				}
 			});
 
 			for (const [k,v] of Object.entries(tmp)) {
